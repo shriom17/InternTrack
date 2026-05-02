@@ -1,36 +1,90 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# InternTrack
+
+InternTrack is a clean internship discovery and application tracking app built with Next.js and Supabase. It gives students a simple place to browse internships, sign up or log in, and track the roles they have already applied to.
+
+## Features
+
+- Landing page with a polished hero section and internship preview
+- Email/password authentication with Supabase
+- Dashboard showing a curated internship list
+- One-click apply flow with persisted application state
+- Responsive UI that works well on desktop and mobile
+
+## Tech Stack
+
+- Next.js 16
+- React 19
+- Supabase Auth and database
+- Tailwind CSS 4
 
 ## Getting Started
 
-First, run the development server:
+### 1. Install dependencies
+
+```bash
+npm install
+```
+
+### 2. Set up environment variables
+
+Create a `.env.local` file in the project root and add your Supabase credentials:
+
+```env
+NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
+```
+
+### 3. Run the development server
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+## Available Scripts
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- `npm run dev` - start the local development server
+- `npm run build` - create a production build
+- `npm run start` - run the production server
+- `npm run lint` - run ESLint
 
-## Learn More
+## Project Structure
 
-To learn more about Next.js, take a look at the following resources:
+```text
+app/
+	page.js          Home page
+	login/page.js    Login screen
+	signup/page.js   Signup screen
+	dashboard/page.js Internship dashboard
+components/
+	ApplicationList.js
+	InternshipCard.js
+	Navbar.js
+lib/
+	supabaseClient.js
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## How It Works
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+1. Users land on the home page and can go to sign up or login.
+2. Authentication is handled through Supabase.
+3. The dashboard renders internship cards and tracks application status.
+4. Applications are stored in the `applications` table for persistence.
 
-## Deploy on Vercel
+## Supabase Requirements
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+This app expects a Supabase project with authentication enabled and an `applications` table that stores at least:
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- `internship_id`
+- `user_id`
+- `user_email`
+
+## Notes
+
+- The dashboard currently includes sample internship data as the default experience.
+- If the user is not logged in, applying redirects to the login page.
+
+## Deployment Link'
+
+- https://intern-track-one.vercel.app/
