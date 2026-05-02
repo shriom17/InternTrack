@@ -1,9 +1,9 @@
 import ApplicationList from "../../components/ApplicationList";
 
 const sample = [
-  { id: "1", title: "Frontend Intern", company: "Acme Co.", location: "Dhaka", stipend: "10k/mo" },
-  { id: "2", title: "Backend Intern", company: "Beta Ltd.", location: "Chittagong", stipend: "12k/mo" },
-  { id: "3", title: "Data Intern", company: "Gamma Inc.", location: "Sylhet", stipend: "8k/mo" },
+  { id: "1", title: "Frontend Intern", company: "Amazon.", location: "Kolkata", stipend: "40k/mo" },
+  { id: "2", title: "Backend Intern", company: "Flipkart", location: "Mumbai", stipend: "32k/mo" },
+  { id: "3", title: "Data Intern", company: "Meta", location: "Bengalore", stipend: "80k/mo" },
 ];
 
 export default function DashboardPage() {

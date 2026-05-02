@@ -2,20 +2,20 @@ import Link from "next/link";
 
 export default function Navbar() {
 	return (
-		<nav className="w-full bg-transparent">
+		<nav className="w-full bg-blue-600 shadow-md">
 			<div className="max-w-4xl mx-auto flex items-center justify-between py-4 px-4">
-				<Link href="/" className="text-xl font-bold text-black dark:text-zinc-50">
+				<Link href="/" className="text-xl font-bold text-white">
 					InternTrack
 				</Link>
 
 				<div className="flex items-center gap-4">
-					<Link href="/dashboard" className="text-sm text-zinc-700 dark:text-zinc-300">
+					<Link href="/dashboard" className="text-sm text-white/90">
 						Dashboard
 					</Link>
-					<Link href="/login" className="text-sm text-zinc-700 dark:text-zinc-300">
+					<Link href="/login" className="text-sm text-white/90">
 						Login
 					</Link>
-					<Link href="/signup" className="text-sm text-blue-600">
+					<Link href="/signup" className="text-sm text-white font-semibold">
 						Sign up
 					</Link>
 				</div>
