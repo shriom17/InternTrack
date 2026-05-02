@@ -2,111 +2,129 @@
 
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { supabase } from "../../lib/supabaseClient";
 
 export default function SignupPage() {
-	const router = useRouter();
-	const [name, setName] = useState("");
-	const [email, setEmail] = useState("");
-	const [password, setPassword] = useState("");
-	const [confirmPassword, setConfirmPassword] = useState("");
-	const [loading, setLoading] = useState(false);
-	const [error, setError] = useState("");
-	const [success, setSuccess] = useState("");
+  const router = useRouter();
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
 
-	const handleSubmit = async (e) => {
-		e.preventDefault();
-		setError("");
-		setSuccess("");
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError("");
+    setSuccess("");
 
-		if (!email || !password) {
-			setError("Email and password are required.");
-			return;
-		}
-		if (password !== confirmPassword) {
-			setError("Passwords do not match.");
-			return;
-		}
+    if (!email || !password) {
+      setError("Email and password are required.");
+      return;
+    }
+    if (password !== confirmPassword) {
+      setError("Passwords do not match.");
+      return;
+    }
 
-		setLoading(true);
-		const { data, error: err } = await supabase.auth.signUp(
-			{ email, password },
-			{ data: { full_name: name } }
-		);
+    setLoading(true);
+    const { data, error: err } = await supabase.auth.signUp(
+      { email, password },
+      { data: { full_name: name } }
+    );
 
-		setLoading(false);
-		if (err) {
-			setError(err.message || "Signup failed.");
-			return;
-		}
+    setLoading(false);
+    if (err) {
+      setError(err.message || "Signup failed.");
+      return;
+    }
 
-		setSuccess("Signup successful. Check your email to confirm.");
-		// Optional: redirect to login or dashboard after short delay
-		setTimeout(() => router.push("/login"), 1200);
-	};
+    setSuccess("Signup successful. Check your email to confirm.");
+    setTimeout(() => router.push("/login"), 1200);
+  };
 
-	return (
-		<div className="min-h-screen flex items-center justify-center bg-zinc-50 dark:bg-black">
-			<div className="w-full max-w-md bg-white dark:bg-[#0b0b0b] p-8 rounded shadow">
-				<h1 className="text-2xl font-semibold mb-4 text-black dark:text-zinc-50">Signup</h1>
-				<form onSubmit={handleSubmit} className="space-y-4">
-					<div>
-						<label className="block text-sm mb-1 text-zinc-700 dark:text-zinc-300">Full name</label>
-						<input
-							value={name}
-							onChange={(e) => setName(e.target.value)}
-							className="w-full px-3 py-2 border rounded bg-transparent text-black dark:text-zinc-50"
-							placeholder="Your name"
-						/>
-					</div>
-					<div>
-						<label className="block text-sm mb-1 text-zinc-700 dark:text-zinc-300">Email</label>
-						<input
-							type="email"
-							value={email}
-							onChange={(e) => setEmail(e.target.value)}
-							className="w-full px-3 py-2 border rounded bg-transparent text-black dark:text-zinc-50"
-							placeholder="you@example.com"
-							required
-						/>
-					</div>
-					<div>
-						<label className="block text-sm mb-1 text-zinc-700 dark:text-zinc-300">Password</label>
-						<input
-							type="password"
-							value={password}
-							onChange={(e) => setPassword(e.target.value)}
-							className="w-full px-3 py-2 border rounded bg-transparent text-black dark:text-zinc-50"
-							placeholder="Password"
-							required
-						/>
-					</div>
-					<div>
-						<label className="block text-sm mb-1 text-zinc-700 dark:text-zinc-300">Confirm password</label>
-						<input
-							type="password"
-							value={confirmPassword}
-							onChange={(e) => setConfirmPassword(e.target.value)}
-							className="w-full px-3 py-2 border rounded bg-transparent text-black dark:text-zinc-50"
-							placeholder="Confirm password"
-							required
-						/>
-					</div>
+  return (
+    <div className="min-h-screen flex items-center justify-center">
+      <div className="w-full max-w-5xl grid grid-cols-1 md:grid-cols-2 gap-8 items-center px-4">
+        <aside className="hidden md:flex flex-col justify-center p-8 rounded-2xl bg-gradient-to-br from-sky-600 to-indigo-600 text-white shadow-xl">
+          <h2 className="text-3xl font-bold mb-3">Join InternTrack</h2>
+          <p className="text-sm opacity-90">Find premium internships, apply with one click and track your applications.</p>
+          <ul className="mt-6 space-y-3 text-sm">
+            <li>• Verified companies</li>
+            <li>• Quick apply</li>
+            <li>• Stipend & role filters</li>
+          </ul>
+        </aside>
 
-					{error && <div className="text-sm text-red-600">{error}</div>}
-					{success && <div className="text-sm text-green-600">{success}</div>}
+        <div className="bg-white dark:bg-[#071022] rounded-2xl shadow-2xl p-8">
+          <h1 className="text-2xl font-semibold mb-4 text-sky-900 dark:text-sky-100">Create your account</h1>
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div>
+              <label className="block text-sm mb-1 text-zinc-600 dark:text-zinc-300">Full name</label>
+              <input
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:ring-2 focus:ring-sky-400 outline-none bg-white/80 dark:bg-transparent text-sky-900 dark:text-sky-100"
+                placeholder="Your name"
+              />
+            </div>
 
-					<div>
-						<button
-							type="submit"
-							className="w-full py-2 px-4 bg-foreground text-white rounded disabled:opacity-60"
-							disabled={loading}
-						>
-							{loading ? "Creating..." : "Sign up"}
-						</button>
-					</div>
-				</form>
-			</div>
-		</div>
-	);
+            <div>
+              <label className="block text-sm mb-1 text-zinc-600 dark:text-zinc-300">Email</label>
+              <input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:ring-2 focus:ring-sky-400 outline-none bg-white/80 dark:bg-transparent text-sky-900 dark:text-sky-100"
+                placeholder="you@example.com"
+                required
+              />
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm mb-1 text-zinc-600 dark:text-zinc-300">Password</label>
+                <input
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:ring-2 focus:ring-sky-400 outline-none bg-white/80 dark:bg-transparent text-sky-900 dark:text-sky-100"
+                  placeholder="Password"
+                  required
+                />
+              </div>
+              <div>
+                <label className="block text-sm mb-1 text-zinc-600 dark:text-zinc-300">Confirm</label>
+                <input
+                  type="password"
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:ring-2 focus:ring-sky-400 outline-none bg-white/80 dark:bg-transparent text-sky-900 dark:text-sky-100"
+                  placeholder="Confirm password"
+                  required
+                />
+              </div>
+            </div>
+
+            {error && <div className="text-sm text-red-600">{error}</div>}
+            {success && <div className="text-sm text-green-600">{success}</div>}
+
+            <div>
+              <button
+                type="submit"
+                className="w-full py-3 px-4 bg-gradient-to-r from-sky-600 to-indigo-600 text-white rounded-full shadow-lg disabled:opacity-60"
+                disabled={loading}
+              >
+                {loading ? "Creating..." : "Create account"}
+              </button>
+            </div>
+          </form>
+
+          <p className="mt-4 text-sm text-zinc-600 dark:text-zinc-300">Already have an account? <Link href="/login" className="text-sky-600 dark:text-sky-300 font-semibold">Sign in</Link></p>
+        </div>
+      </div>
+    </div>
+  );
 }

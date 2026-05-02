@@ -1,3 +1,5 @@
+"use client";
+
 import InternshipCard from "./InternshipCard";
 
 export default function ApplicationList({ internships = [], onApply }) {
@@ -6,7 +8,7 @@ export default function ApplicationList({ internships = [], onApply }) {
 	}
 
 	return (
-		<div className="grid gap-4">
+		<div className="grid gap-6 grid-cols-1 sm:grid-cols-2">
 			{internships.map((item) => (
 				<InternshipCard
 					key={item.id || item.title}
@@ -15,7 +17,11 @@ export default function ApplicationList({ internships = [], onApply }) {
 					company={item.company}
 					location={item.location}
 					stipend={item.stipend}
+					description={item.description}
+					responsibilities={item.responsibilities}
+					perks={item.perks}
 					onApply={onApply}
+					applied={!!item.applied}
 				/>
 			))}
 		</div>
