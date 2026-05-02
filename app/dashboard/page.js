@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import ApplicationList from "../../components/ApplicationList";
 import { supabase } from "../../lib/supabaseClient";
 
@@ -108,6 +108,44 @@ const sample = [
 export default function DashboardPage() {
   const [internships, setInternships] = useState(sample.map((i) => ({ ...i, applied: false })));
 
+  // fetch applications for the logged-in user and mark applied internships
+  useEffect(() => {
+    let mounted = true;
+
+    async function fetchApplicationsForUser(u) {
+      try {
+        const { data, error } = await supabase.from("applications").select("internship_id").eq("user_id", u.id);
+        if (error) {
+          console.error("fetch applications error:", error);
+          return;
+        }
+
+        if (!mounted) return;
+        const appliedIds = new Set((data || []).map((r) => r.internship_id));
+        setInternships((prev) => prev.map((it) => ({ ...it, applied: appliedIds.has(it.id) })));
+      } catch (e) {
+        console.error(e);
+      }
+    }
+
+    (async () => {
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+      if (user) fetchApplicationsForUser(user);
+    })();
+
+    const { data: sub } = supabase.auth.onAuthStateChange((event, session) => {
+      if (session && session.user) fetchApplicationsForUser(session.user);
+      if (!session) setInternships((prev) => prev.map((it) => ({ ...it, applied: false })));
+    });
+
+    return () => {
+      mounted = false;
+      sub?.subscription?.unsubscribe?.();
+    };
+  }, []);
+
   const handleApply = async (id) => {
     // optimistic UI update
     setInternships((prev) => prev.map((it) => (it.id === id ? { ...it, applied: true } : it)));
@@ -126,13 +164,29 @@ export default function DashboardPage() {
     }
 
     // store in 'applications' table
-    const { error } = await supabase.from("applications").insert([
+    const { data, error } = await supabase.from("applications").insert([
       {
         internship_id: id,
         user_id: user.id,
         user_email: user.email,
       },
     ]);
+
+    console.log("apply result:", { data, error });
+
+    if (!error) {
+      // refresh applied flags from DB to ensure persistence across reloads
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+      if (user) {
+        const { data: apps, error: fetchErr } = await supabase.from("applications").select("internship_id").eq("user_id", user.id);
+        if (!fetchErr) {
+          const appliedIds = new Set((apps || []).map((r) => r.internship_id));
+          setInternships((prev) => prev.map((it) => ({ ...it, applied: appliedIds.has(it.id) })));
+        }
+      }
+    }
 
     if (error) {
       // revert on failure
