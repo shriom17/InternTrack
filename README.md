@@ -85,6 +85,6 @@ This app expects a Supabase project with authentication enabled and an `applicat
 - The dashboard currently includes sample internship data as the default experience.
 - If the user is not logged in, applying redirects to the login page.
 
-## Deployment Link'
+## Deployment Link
 
 - https://intern-track-one.vercel.app/
